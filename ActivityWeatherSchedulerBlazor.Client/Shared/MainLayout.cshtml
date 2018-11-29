@@ -1,0 +1,23 @@
+﻿@inherits BlazorLayoutComponent
+
+<div class="sidebar">
+    <NavMenu />
+</div>
+
+<div class="main">
+    <div class="top-row px-4">
+        <a href="http://blazor.net" target="_blank" class="ml-md-auto">Blazor Documentation</a>
+        &nbsp;&nbsp;
+        <a href="https://learn-blazor.com" target="_blank">Learn Blazor</a><br />
+        &nbsp;&nbsp;
+        <a href="https://github.com/EdCharbeneau/BlazorGeolocation" target="_blank">How Geolocation?</a><br />
+        &nbsp;&nbsp;
+        <a href="https://openweathermap.org/forecast5" target="_blank">How Weather?</a><br />
+        &nbsp;&nbsp;
+        <a href="https://www.newtonsoft.com/json/help/html/QueryJsonLinq.htm" target="_blank">How JSON?</a><br />
+    </div>
+
+    <div class="content px-4">
+        @Body
+    </div>
+</div>

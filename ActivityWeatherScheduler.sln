@@ -3,7 +3,37 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActivityWeatherSchedulerLibraryNETStandard", "ActivityWeatherSchedulerLibraryNETStandard\ActivityWeatherSchedulerLibraryNETStandard.csproj", "{32B4694D-97ED-4535-81E0-4914448CE204}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActivityWeatherSchedulerTests", "ActivityWeatherSchedulerTests\ActivityWeatherSchedulerTests.csproj", "{93CB8725-05B5-4079-AD56-A7FC42C8BA77}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActivityWeatherSchedulerBlazor.Server", "ActivityWeatherSchedulerBlazor.Server\ActivityWeatherSchedulerBlazor.Server.csproj", "{4FB3BC93-C6FD-43C5-BDFF-1489A64E855F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActivityWeatherSchedulerBlazor.Client", "ActivityWeatherSchedulerBlazor.Client\ActivityWeatherSchedulerBlazor.Client.csproj", "{09BF05E6-1756-497F-AFD5-436A3E017BF9}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{32B4694D-97ED-4535-81E0-4914448CE204}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32B4694D-97ED-4535-81E0-4914448CE204}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32B4694D-97ED-4535-81E0-4914448CE204}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32B4694D-97ED-4535-81E0-4914448CE204}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93CB8725-05B5-4079-AD56-A7FC42C8BA77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93CB8725-05B5-4079-AD56-A7FC42C8BA77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93CB8725-05B5-4079-AD56-A7FC42C8BA77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93CB8725-05B5-4079-AD56-A7FC42C8BA77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FB3BC93-C6FD-43C5-BDFF-1489A64E855F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FB3BC93-C6FD-43C5-BDFF-1489A64E855F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FB3BC93-C6FD-43C5-BDFF-1489A64E855F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FB3BC93-C6FD-43C5-BDFF-1489A64E855F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09BF05E6-1756-497F-AFD5-436A3E017BF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09BF05E6-1756-497F-AFD5-436A3E017BF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09BF05E6-1756-497F-AFD5-436A3E017BF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09BF05E6-1756-497F-AFD5-436A3E017BF9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
