@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActivityWeatherSchedulerBla
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActivityWeatherSchedulerBlazor.Client", "ActivityWeatherSchedulerBlazor.Client\ActivityWeatherSchedulerBlazor.Client.csproj", "{09BF05E6-1756-497F-AFD5-436A3E017BF9}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorGridComponent", "BlazorGridComponent\BlazorGridComponent.csproj", "{2A1DF082-CB19-4926-8DFC-703E343759B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{09BF05E6-1756-497F-AFD5-436A3E017BF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09BF05E6-1756-497F-AFD5-436A3E017BF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09BF05E6-1756-497F-AFD5-436A3E017BF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A1DF082-CB19-4926-8DFC-703E343759B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A1DF082-CB19-4926-8DFC-703E343759B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A1DF082-CB19-4926-8DFC-703E343759B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A1DF082-CB19-4926-8DFC-703E343759B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

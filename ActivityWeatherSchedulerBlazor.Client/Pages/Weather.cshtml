@@ -18,6 +18,20 @@
 }
 else
 {
+    <BlazorGrid Items="@forecasts" PageSize="4">
+        <GridHeader>
+            <th>Date</th>
+            <th>TemperatureC</th>
+            <th>TemperatureF</th>
+            <th>Summary</th>
+        </GridHeader>
+        <GridRow>
+            <td>@context.Time.LocalDateTime.ToShortDateString()</td>
+            <td>@context.TemperatureC</td>
+            <td>@context.TemperatureF</td>
+            <td>@context.Summary</td>
+        </GridRow>
+    </BlazorGrid>
     <table class="table">
         <thead>
             <tr>
@@ -67,7 +81,6 @@ else
         Longitude = position.Coords.Longitude;
         HasGeolocationErrors = false;
         await GetForecastFromGeolocation();
-        StateHasChanged();
     }
 
     void HandleError(PositionError err)
