@@ -62,7 +62,7 @@ namespace ActivityWeatherSchedulerTests
                 TemperatureF = 70
             };
 
-            ICalCreator.CreateICalForActivity(activity);
+            ICalCreator.CreateCalendarEventForActivity(activity);
 
             Assert.Equal("", "");
         }
@@ -78,7 +78,7 @@ namespace ActivityWeatherSchedulerTests
                 TemperatureF = 70
             };
 
-            var calendarEvent = ICalCreator.CreateICalForActivity(activity);
+            var calendarEvent = ICalCreator.CreateCalendarEventForActivity(activity);
             var directoryPath = "D:\\Users\\Daniel\\Downloads";
             var filePath = directoryPath + $"\\{activity.Summary}.ics";
             ICalCreator.SaveCalendarLocally(filePath, calendarEvent);

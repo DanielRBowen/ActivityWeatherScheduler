@@ -7,7 +7,7 @@ namespace ActivityWeatherSchedulerLibraryNETStandard
 {
     public class ICalCreator
     {
-        public static CalendarEvent CreateICalForActivity(Activity activity)
+        public static CalendarEvent CreateCalendarEventForActivity(Activity activity)
         {
             var hourAfterStart = activity.Time + new TimeSpan(1, 0, 0);
 
@@ -24,6 +24,11 @@ namespace ActivityWeatherSchedulerLibraryNETStandard
 
         public static void SaveCalendarLocally(string filePath, CalendarEvent calendarEvent)
         {
+            File.WriteAllText(filePath, MakeCalendarString(calendarEvent));
+        }
+
+        public static string MakeCalendarString(CalendarEvent calendarEvent)
+        {
             var iCalStringBuilder = new StringBuilder();
             iCalStringBuilder.AppendLine("BEGIN:VCALENDAR");
             iCalStringBuilder.AppendLine("PRODID:Daniel Richard Bowen");
@@ -38,8 +43,7 @@ namespace ActivityWeatherSchedulerLibraryNETStandard
             iCalStringBuilder.AppendLine($"UID:{new Guid().ToString()}");
             iCalStringBuilder.AppendLine("END:VEVENT");
             iCalStringBuilder.AppendLine("END:VCALENDAR");
-            var serializedCalendar = iCalStringBuilder.ToString();
-            File.WriteAllText(filePath, serializedCalendar);
+            return iCalStringBuilder.ToString();
         }
     }
 }
