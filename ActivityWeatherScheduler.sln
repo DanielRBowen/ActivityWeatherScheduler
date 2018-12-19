@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActivityWeatherSchedulerBla
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorGridComponent", "BlazorGridComponent\BlazorGridComponent.csproj", "{2A1DF082-CB19-4926-8DFC-703E343759B2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DownloadComponents", "DownloadComponents\DownloadComponents.csproj", "{5C8C7B2D-E411-4AD0-BA1C-5FCC1C5C31C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{2A1DF082-CB19-4926-8DFC-703E343759B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A1DF082-CB19-4926-8DFC-703E343759B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A1DF082-CB19-4926-8DFC-703E343759B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C8C7B2D-E411-4AD0-BA1C-5FCC1C5C31C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C8C7B2D-E411-4AD0-BA1C-5FCC1C5C31C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C8C7B2D-E411-4AD0-BA1C-5FCC1C5C31C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C8C7B2D-E411-4AD0-BA1C-5FCC1C5C31C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

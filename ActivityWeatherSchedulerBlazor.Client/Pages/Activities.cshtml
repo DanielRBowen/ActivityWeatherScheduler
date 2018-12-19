@@ -13,6 +13,12 @@
 		</div>
 	</div>
 	<div class="form-group">
+		<label for="zipCode" class="col-md-2 control-label">Zip Code:</label>
+		<div class="col-md-10 padding-left-right-0">
+			<input type="text" bind="@ZipCode" class="form-control" id="zipCode"/>
+		</div>
+	</div>
+	<div class="form-group">
 		<label for="inputName" class="col-md-2 control-label">Summary:</label>
 		<div class="col-md-10 padding-left-right-0">
 			<input type="text" bind="@Summary" class="form-control" placeholder="Summary" />
@@ -21,7 +27,7 @@
 	<div class="form-group">
 		<label for="inputName" class="col-md-2 control-label">Temperature (F°):</label>
 		<div class="col-md-10 padding-left-right-0">
-			<input type="text" bind="@TemperatureF" class="form-control" placeholder="32" />
+			<input type="text" bind="@TemperatureF" class="form-control" />
 		</div>
 	</div>
 	<div class="form-check">
@@ -33,12 +39,15 @@
 
 <h2>List of activites for @Email:</h2>
 
-@if (activities == null || activities.Length == 0)
+@if (activities == null || activities.Count == 0)
 {
 	<p><em>No Activities to show for this email.</em></p>
 }
 else
 {
+	<div>
+		<DownloadButton Payload="Saul Goodman" FileName="File.txt">My Download</DownloadButton>
+	</div>
 	<table class="table">
 		<thead>
 			<tr>
@@ -51,12 +60,26 @@ else
 		<tbody>
 			@foreach (var activity in activities)
 			{
-				<tr>
-					<td>@activity.Summary</td>
-					<td>@activity.TemperatureF</td>
-					<td>@activity.Above</td>
-					<td><a href="" download="">ICal File</a><!-- activity download string to blob --></td>
-				</tr>
+			<tr>
+				<td>@activity.Summary</td>
+				<td>@activity.TemperatureF</td>
+				@if (activity.Above == true)
+				{
+					<td>Above</td>
+				}
+				else
+				{
+					<td>Below</td>
+				}
+				@if (string.IsNullOrWhiteSpace(activity.CalendarString))
+				{
+					<td><DownloadButton Payload="" FileName="">Conditions not met</DownloadButton></td>
+				}
+				else
+				{
+					<td><DownloadButton Payload="@activity.CalendarString" FileName="activity.ical">ICal File</DownloadButton></td>
+				}
+			</tr>
 			}
 		</tbody>
 	</table>
@@ -64,36 +87,38 @@ else
 
 
 @functions {
-Activity[] activities;
-string Email = string.Empty;
-string Summary = string.Empty;
-decimal TemperatureF;
-bool Above = false;
+	List<Activity> activities;
+	string Email = string.Empty;
+	string Summary = string.Empty;
+	decimal TemperatureF = 32;
+	bool Above = false;
+	private string ZipCode { get; set; } = "84103";
 
-protected async Task GetActivities()
-{
-	activities = await Http.GetJsonAsync<Activity[]>($"api/WeatherForecast/GetActivities/{Email}");
-
-	if (activities.Length > 0)
+	protected async Task GetActivities()
 	{
-		StateHasChanged();
-	}
-}
+		activities = await Http.GetJsonAsync<List<Activity>>($"api/WeatherForecast/GetActivities/{Email}");
 
-protected async Task PostActivity()
-{
-	if (Validation.IsEmail(Email))
-	{
-		var activity = new Activity
+		if (activities.Count > 0)
 		{
-			Email = Email,
-			Summary = Summary,
-			TemperatureF = TemperatureF,
-			Above = Above
-		};
-
-		await Http.PostJsonAsync<Activity>($"api/WeatherForecast/AddActivity", activity);
-		await GetActivities();
+			StateHasChanged();
+		}
 	}
-}
+
+	protected async Task PostActivity()
+	{
+		if (Validation.IsEmail(Email) && Validation.IsFiveDigits(ZipCode))
+		{
+			var activity = new Activity
+			{
+				EmailAddress = Email,
+				ZipCode = ZipCode,
+				Summary = Summary,
+				TemperatureF = TemperatureF,
+				Above = Above
+			};
+
+			await Http.PostJsonAsync<Activity>($"api/WeatherForecast/AddActivity", activity);
+			await GetActivities();
+		}
+	}
 }

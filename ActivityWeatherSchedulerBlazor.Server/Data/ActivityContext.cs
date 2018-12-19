@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ActivityWeatherSchedulerBlazor.Server.Data
 {
-    public class ActivityContext : DbContext
-    {
-        public ActivityContext(DbContextOptions<ActivityContext> options) : base(options) { }
+	public class ActivityContext : DbContext
+	{
+		public ActivityContext(DbContextOptions<ActivityContext> options) : base(options) { }
 
-        public DbSet<Activity> Activities { get; set; }
-    }
+		public DbSet<Activity> Activities { get; set; }
+
+		public DbSet<CachedWeather> CachedWeathers { get; set; }
+	}
 }

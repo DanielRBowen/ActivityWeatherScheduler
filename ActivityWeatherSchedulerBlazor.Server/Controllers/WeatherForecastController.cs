@@ -23,14 +23,56 @@ namespace ActivityWeatherSchedulerBlazor.Server.Controllers
 		}
 
 		[HttpGet("[action]/{zip}")]
-		public IEnumerable<WeatherForecast> FiveDayWeatherForecast(string zip)
+		public async Task<IList<WeatherForecast>> FiveDayWeatherForecast(string zip)
+		{
+			return await CurrentOrPreviousFiveDayWeatherForecast(zip);
+		}
+
+		private async Task<IList<WeatherForecast>> CurrentOrPreviousFiveDayWeatherForecast(string zip)
 		{
 			if (string.IsNullOrWhiteSpace(zip))
 			{
 				return null;
 			}
 
-			return GetWeather.FiveDayAround1500Forecast(zip);
+			var utcNow = DateTimeOffset.UtcNow;
+			var weatherForecasts = new List<WeatherForecast>();
+			var cachedWeather = await ActivityDbContext.CachedWeathers
+				.AsNoTracking()
+				.Include(cachedWeather0 => cachedWeather0.WeatherForecasts)
+				.SingleOrDefaultAsync(cachedWeather0 => cachedWeather0.ZipCode == zip && cachedWeather0.DateCached.LocalDateTime.ToShortDateString() == utcNow.LocalDateTime.ToShortDateString());
+
+
+			if (cachedWeather == null)
+			{
+				weatherForecasts = GetWeather.FiveDayAround1500Forecast(zip).ToList();
+
+				cachedWeather = new CachedWeather
+				{
+					ZipCode = zip,
+					DateCached = utcNow,
+					WeatherForecasts = weatherForecasts
+				};
+
+				var previousCachedWeathersForZipcodeQuery = ActivityDbContext.CachedWeathers
+					.Where(previousCachedWeather => previousCachedWeather.ZipCode == zip);
+
+				if (previousCachedWeathersForZipcodeQuery.Count() > 0)
+				{
+					foreach (var previousCachedWeather in previousCachedWeathersForZipcodeQuery)
+					{
+						ActivityDbContext.CachedWeathers.Remove(previousCachedWeather);
+					}
+				}
+
+				ActivityDbContext.CachedWeathers.Add(cachedWeather);
+				await ActivityDbContext.SaveChangesAsync();
+				return weatherForecasts;
+			}
+			else
+			{
+				return cachedWeather.WeatherForecasts;
+			}
 		}
 
 		[HttpGet("[action]/{latitude}&{longitude}")]
@@ -42,15 +84,34 @@ namespace ActivityWeatherSchedulerBlazor.Server.Controllers
 		[HttpPost("[action]")]
 		public async Task AddActivity([FromBody]Activity activity)
 		{
-			ActivityDbContext.Activities.Add(activity);
+			var weatherForecasts = CurrentOrPreviousFiveDayWeatherForecast(activity.ZipCode).Result;
+			var scheduledActivity = ScheduleActivity(weatherForecasts, activity);
+			ActivityDbContext.Activities.Add(scheduledActivity);
 			await ActivityDbContext.SaveChangesAsync();
+		}
+
+		private Activity ScheduleActivity(IList<WeatherForecast> weatherForecasts, Activity activity)
+		{
+			var scheduledWeatherForecast = activity.Above
+				? weatherForecasts.FirstOrDefault(weatherForecast => weatherForecast.TemperatureF >= activity.TemperatureF)
+				: weatherForecasts.FirstOrDefault(weatherForecast => weatherForecast.TemperatureF <= activity.TemperatureF);
+
+			if (scheduledWeatherForecast != null)
+			{
+				activity.CalendarString = ICalCreator.MakeCalendarString(activity);
+				return activity;
+			}
+			else
+			{
+				return activity;
+			}
 		}
 
 		[HttpGet("[action]/{email}")]
 		public async Task<IList<Activity>> GetActivities(string email)
 		{
 			var activities = await ActivityDbContext.Activities
-				.Where(activity => activity.Email == email)
+				.Where(activity => activity.EmailAddress == email)
 				.ToListAsync();
 			return activities;
 		}

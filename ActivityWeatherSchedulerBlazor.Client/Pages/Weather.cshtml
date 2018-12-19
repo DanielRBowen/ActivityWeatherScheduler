@@ -1,6 +1,6 @@
 ﻿@using ActivityWeatherSchedulerLibraryNETStandard.Models
+@using ActivityWeatherSchedulerLibraryNETStandard
 @using EJC.Blazor.Geolocation <!--https://github.com/EdCharbeneau/BlazorGeolocation-->
-@using System.Text.RegularExpressions
 @page "/Weather"
 @inject HttpClient Http
 
@@ -14,112 +14,112 @@
 
 @if (forecasts == null)
 {
-    <p><em>Loading...</em></p>
+	<p><em>Loading...</em></p>
 }
 else
 {
-    <BlazorGrid Items="@forecasts" PageSize="4">
-        <GridHeader>
-            <th>Date</th>
-            <th>TemperatureC</th>
-            <th>TemperatureF</th>
-            <th>Summary</th>
-        </GridHeader>
-        <GridRow>
-            <td>@context.Time.LocalDateTime.DayOfWeek</td>
-            <td>@context.TemperatureC</td>
-            <td>@context.TemperatureF</td>
-            <td>@context.Summary</td>
-        </GridRow>
-    </BlazorGrid>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Time.LocalDateTime.ToShortDateString() - @forecast.Time.LocalDateTime.DayOfWeek</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+	<BlazorGrid Items="@forecasts" PageSize="4">
+		<GridHeader>
+			<th>Date</th>
+			<th>TemperatureC</th>
+			<th>TemperatureF</th>
+			<th>Summary</th>
+		</GridHeader>
+		<GridRow>
+			<td>@context.Time.LocalDateTime.DayOfWeek</td>
+			<td>@context.TemperatureC</td>
+			<td>@context.TemperatureF</td>
+			<td>@context.Summary</td>
+		</GridRow>
+	</BlazorGrid>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Date</th>
+				<th>Temp. (C)</th>
+				<th>Temp. (F)</th>
+				<th>Summary</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var forecast in forecasts)
+			{
+				<tr>
+					<td>@forecast.Time.LocalDateTime.ToShortDateString() - @forecast.Time.LocalDateTime.DayOfWeek</td>
+					<td>@forecast.TemperatureC</td>
+					<td>@forecast.TemperatureF</td>
+					<td>@forecast.Summary</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 }
 
 @functions {
-    WeatherForecast[] forecasts;
-    private string Zip { get; set; } = "84103";
-    bool HasGeolocation;
-    double Latitude;
-    double Longitude;
-    bool HasGeolocationErrors;
-    string ErrorMessage;
+List<WeatherForecast> forecasts;
+private string Zip { get; set; } = "84103";
+bool HasGeolocation;
+double Latitude;
+double Longitude;
+bool HasGeolocationErrors;
+string ErrorMessage;
 
-    protected override async Task OnInitAsync()
-    {
-        HasGeolocation = await Geolocation.HasGeolocationFeature();
+protected override async Task OnInitAsync()
+{
+	HasGeolocation = await Geolocation.HasGeolocationFeature();
 
-        if (HasGeolocation)
-        {
-            var geolocation = new Geolocation();
-            await geolocation.WatchPosition(Handler, HandleError);
-        }
-    }
+	if (HasGeolocation)
+	{
+		var geolocation = new Geolocation();
+		await geolocation.WatchPosition(Handler, HandleError);
+	}
+}
 
-    async void Handler(Position position)
-    {
-        Latitude = position.Coords.Latitude;
-        Longitude = position.Coords.Longitude;
-        HasGeolocationErrors = false;
-        await GetForecastFromGeolocation();
-    }
+async void Handler(Position position)
+{
+	Latitude = position.Coords.Latitude;
+	Longitude = position.Coords.Longitude;
+	HasGeolocationErrors = false;
+	await GetForecastFromGeolocation();
+}
 
-    void HandleError(PositionError err)
-    {
-        HasGeolocationErrors = true;
-        switch (err)
-        {
-            case PositionError.PERMISSION_DENIED:
-                ErrorMessage = "Permission to access location was denied by the user.";
-                break;
-            case PositionError.POSITION_UNAVAILABLE:
-                ErrorMessage = "No location data was available.";
-                break;
-            case PositionError.TIMEOUT:
-                ErrorMessage = "Time out receiving location data.";
-                break;
-            default:
-                break;
-        }
+void HandleError(PositionError err)
+{
+	HasGeolocationErrors = true;
+	switch (err)
+	{
+		case PositionError.PERMISSION_DENIED:
+			ErrorMessage = "Permission to access location was denied by the user.";
+			break;
+		case PositionError.POSITION_UNAVAILABLE:
+			ErrorMessage = "No location data was available.";
+			break;
+		case PositionError.TIMEOUT:
+			ErrorMessage = "Time out receiving location data.";
+			break;
+		default:
+			break;
+	}
 
-        StateHasChanged();
-    }
+	StateHasChanged();
+}
 
-    protected async Task GetWeatherForZip()
-    {
-        if (Regex.IsMatch(Zip, @"^\d{5}$"))
-        {
-            forecasts = await Http.GetJsonAsync<WeatherForecast[]>($"api/WeatherForecast/FiveDayWeatherForecast/{Zip}");
-            StateHasChanged();
-        }
-    }
+protected async Task GetWeatherForZip()
+{
+	if (Validation.IsFiveDigits(Zip))
+	{
+		forecasts = await Http.GetJsonAsync<List<WeatherForecast>>($"api/WeatherForecast/FiveDayWeatherForecast/{Zip}");
+		StateHasChanged();
+	}
+}
 
-    protected async Task GetForecastFromGeolocation()
-    {
-        if (HasGeolocation)
-        {
-            forecasts = await Http.GetJsonAsync<WeatherForecast[]>($"api/WeatherForecast/FiveDayWeatherForecast/{Latitude}&{Longitude}");
-            StateHasChanged();
-        }
-    }
+protected async Task GetForecastFromGeolocation()
+{
+	if (HasGeolocation)
+	{
+		forecasts = await Http.GetJsonAsync<List<WeatherForecast>>($"api/WeatherForecast/FiveDayWeatherForecast/{Latitude}&{Longitude}");
+		StateHasChanged();
+	}
+}
 }
 
