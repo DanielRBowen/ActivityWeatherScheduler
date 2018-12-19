@@ -6,96 +6,94 @@
 <h1>Activities</h1>
 
 <div class="form-horizontal">
-    <div class="form-group">
-        <label for="inputName" class="col-md-2 control-label">Email:</label>
-        <div class="col-md-10 padding-left-right-0">
-            <input type="text" onblur="@GetActivities" bind="@Email" class="form-control" placeholder="user@email.com" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="inputName" class="col-md-2 control-label">Summary:</label>
-        <div class="col-md-10 padding-left-right-0">
-            <input type="text" bind="@Summary" class="form-control" placeholder="Summary" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="inputName" class="col-md-2 control-label">Temperature (F°):</label>
-        <div class="col-md-10 padding-left-right-0">
-            <input type="text" bind="@TemperatureF" class="form-control" placeholder="32" />
-        </div>
-    </div>
-    <div class="form-check">
-        <input type="checkbox" class="form-check-input" bind="@Above" id="aboveCheck" />
-        <label class="form-check-label" for="aboveCheck">Above this Temperature?</label>
-    </div>
-    <button class="btn btn-primary" onclick="@PostActivity">Add Activity</button>
+	<div class="form-group">
+		<label for="inputName" class="col-md-2 control-label">Email:</label>
+		<div class="col-md-10 padding-left-right-0">
+			<input type="text" onblur="@GetActivities" bind="@Email" class="form-control" placeholder="user@email.com" />
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="inputName" class="col-md-2 control-label">Summary:</label>
+		<div class="col-md-10 padding-left-right-0">
+			<input type="text" bind="@Summary" class="form-control" placeholder="Summary" />
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="inputName" class="col-md-2 control-label">Temperature (F°):</label>
+		<div class="col-md-10 padding-left-right-0">
+			<input type="text" bind="@TemperatureF" class="form-control" placeholder="32" />
+		</div>
+	</div>
+	<div class="form-check">
+		<input type="checkbox" class="form-check-input" bind="@Above" id="aboveCheck" />
+		<label class="form-check-label" for="aboveCheck">Above this Temperature?</label>
+	</div>
+	<button class="btn btn-primary" onclick="@PostActivity">Add Activity</button>
 </div>
 
 <h2>List of activites for @Email:</h2>
 
 @if (activities == null || activities.Length == 0)
 {
-    <p><em>No Activities to show for this email.</em></p>
+	<p><em>No Activities to show for this email.</em></p>
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Summary</th>
-                <th>Temp. (F°)</th>
-                <th>Above or Below</th>
-                <th>ICal File</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var activity in activities)
-            {
-                <tr>
-                    <td>@activity.Summary</td>
-                    <td>@activity.TemperatureF</td>
-                    <td>@activity.Above</td>
-                    <td><a href="" download="">ICal File</a><!-- activity download string to blob --></td>
-                </tr>
-            }
-        </tbody>
-    </table>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Summary</th>
+				<th>Temp. (F°)</th>
+				<th>Above or Below</th>
+				<th>ICal File</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var activity in activities)
+			{
+				<tr>
+					<td>@activity.Summary</td>
+					<td>@activity.TemperatureF</td>
+					<td>@activity.Above</td>
+					<td><a href="" download="">ICal File</a><!-- activity download string to blob --></td>
+				</tr>
+			}
+		</tbody>
+	</table>
 }
 
 
 @functions {
-    Activity[] activities;
-    string Email = string.Empty;
-    string Summary = string.Empty;
-    decimal TemperatureF;
-    bool Above = false;
+Activity[] activities;
+string Email = string.Empty;
+string Summary = string.Empty;
+decimal TemperatureF;
+bool Above = false;
 
-    protected async Task GetActivities()
-    {
-        if (Validation.IsEmail(Email))
-        {
-            activities = await Http.GetJsonAsync<Activity[]>($"api/WeatherForecast/GetActivities/{Email}");
-            if (activities.Length > 0)
-            {
-                StateHasChanged();
-            }
-        }
-    }
+protected async Task GetActivities()
+{
+	activities = await Http.GetJsonAsync<Activity[]>($"api/WeatherForecast/GetActivities/{Email}");
 
-    protected async Task PostActivity()
-    {
-        if (Validation.IsEmail(Email))
-        {
-            var activity = new Activity
-            {
-                Email = Email,
-                Summary = Summary,
-                TemperatureF = TemperatureF,
-                Above = Above
-            };
+	if (activities.Length > 0)
+	{
+		StateHasChanged();
+	}
+}
 
-            await Http.PostJsonAsync<Activity>($"api/WeatherForecast/AddActivity", activity);
-            await GetActivities();
-        }
-    }
+protected async Task PostActivity()
+{
+	if (Validation.IsEmail(Email))
+	{
+		var activity = new Activity
+		{
+			Email = Email,
+			Summary = Summary,
+			TemperatureF = TemperatureF,
+			Above = Above
+		};
+
+		await Http.PostJsonAsync<Activity>($"api/WeatherForecast/AddActivity", activity);
+		await GetActivities();
+	}
+}
 }
