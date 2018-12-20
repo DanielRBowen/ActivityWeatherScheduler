@@ -10,11 +10,12 @@ namespace ActivityWeatherSchedulerLibraryNETStandard
 		public static CalendarEvent CreateCalendarEventForActivity(Activity activity)
 		{
 			var hourAfterStart = activity.Time + new TimeSpan(1, 0, 0);
+			var aboveOrBelow = activity.Above ? "above" : "below";
 
 			var calendarEvent = new CalendarEvent
 			{
 				Summary = activity.Summary,
-				Description = $"Do {activity.Summary} when the temperature is around {activity.TemperatureF} degrees fahrenheit",
+				Description = $"Go {activity.Summary} when the temperature is {aboveOrBelow} {activity.TemperatureF} degrees fahrenheit",
 				Start = activity.Time,
 				End = hourAfterStart
 			};
