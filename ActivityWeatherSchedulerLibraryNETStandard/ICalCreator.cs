@@ -54,7 +54,7 @@ namespace ActivityWeatherSchedulerLibraryNETStandard
 
 		public static string FileNameIcalExtensionAppend(string fileName)
 		{
-			return $"{fileName}.ical";
+			return $"{fileName}.ics";
 		}
 	}
 }

@@ -44,17 +44,14 @@
 	<p><em>No Activities to show for this email.</em></p>
 }
 else
-{
-	<div>
-		<DownloadButton Payload="Saul Goodman" FileName="File.txt">My Download</DownloadButton>
-	</div>
+{	
 	<table class="table">
 		<thead>
 			<tr>
 				<th>Summary</th>
 				<th>Temp. (F°)</th>
 				<th>Above or Below</th>
-				<th>ICal File</th>
+				<th>ics File</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -73,11 +70,12 @@ else
 				}
 				@if (string.IsNullOrWhiteSpace(activity.CalendarString))
 				{
-					<td><DownloadButton Payload="" FileName="">Conditions not met</DownloadButton></td>
+					<td>Conditions not met</td>
 				}
 				else
 				{
-					<td><DownloadButton Payload="@activity.CalendarString" FileName="activity.ical">ICal File</DownloadButton></td>
+					fileName = ICalCreator.FileNameIcalExtensionAppend(activity.Id.ToString());
+					<td><DownloadButton Payload="@activity.CalendarString" FileName="@fileName">ics File</DownloadButton></td>
 				}
 			</tr>
 			}
@@ -93,6 +91,7 @@ else
 	decimal TemperatureF = 32;
 	bool Above = false;
 	private string ZipCode { get; set; } = "84103";
+	string fileName = string.Empty;
 
 	protected async Task GetActivities()
 	{

@@ -98,6 +98,7 @@ namespace ActivityWeatherSchedulerBlazor.Server.Controllers
 
 			if (scheduledWeatherForecast != null)
 			{
+				activity.Time = scheduledWeatherForecast.Time;
 				activity.CalendarString = ICalCreator.MakeCalendarString(activity);
 				return activity;
 			}

@@ -13,9 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ActivityWeatherScheduler.Components\ActivityWeatherScheduler.Components.csproj" />
     <ProjectReference Include="..\ActivityWeatherSchedulerLibraryNETStandard\ActivityWeatherSchedulerLibraryNETStandard.csproj" />
-    <ProjectReference Include="..\BlazorGridComponent\BlazorGridComponent.csproj" />
-    <ProjectReference Include="..\DownloadComponents\DownloadComponents.csproj" />
   </ItemGroup>
 
   <ItemGroup>
