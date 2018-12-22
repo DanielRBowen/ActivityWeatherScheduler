@@ -84,14 +84,14 @@ namespace ActivityWeatherSchedulerBlazor.Server.Controllers
 		[HttpPost("[action]")]
 		public async Task AddActivity([FromBody]Activity activity)
 		{
-			var weatherForecasts = CurrentOrPreviousFiveDayWeatherForecast(activity.ZipCode).Result;
-			var scheduledActivity = ScheduleActivity(weatherForecasts, activity);
-			ActivityDbContext.Activities.Add(scheduledActivity);
+			var scheduledActivity = ScheduleActivity(activity);
+			await ActivityDbContext.Activities.AddAsync(scheduledActivity);
 			await ActivityDbContext.SaveChangesAsync();
 		}
 
-		private Activity ScheduleActivity(IList<WeatherForecast> weatherForecasts, Activity activity)
+		private Activity ScheduleActivity(Activity activity)
 		{
+			var weatherForecasts = CurrentOrPreviousFiveDayWeatherForecast(activity.ZipCode).Result;
 			var scheduledWeatherForecast = activity.Above
 				? weatherForecasts.FirstOrDefault(weatherForecast => weatherForecast.TemperatureF >= activity.TemperatureF)
 				: weatherForecasts.FirstOrDefault(weatherForecast => weatherForecast.TemperatureF <= activity.TemperatureF);
@@ -109,12 +109,128 @@ namespace ActivityWeatherSchedulerBlazor.Server.Controllers
 		}
 
 		[HttpGet("[action]/{email}")]
-		public async Task<IList<Activity>> GetActivities(string email)
+		[Produces(typeof(IList<Activity>))]
+		public async Task<IActionResult> ScheduleActivities(string email)
 		{
+			try
+			{
+				if (string.IsNullOrWhiteSpace(email))
+				{
+					return NotFound();
+				}
+
+				var activities = ActivityDbContext.Activities.Where(activity => activity.EmailAddress == email);
+
+				if (!activities.Any())
+				{
+					return NotFound();
+				}
+
+				await activities.ForEachAsync(activity => activity = ScheduleActivity(activity));
+				ActivityDbContext.Activities.UpdateRange(activities);
+				await ActivityDbContext.SaveChangesAsync();
+				return await GetActivitiesInternal(email);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, ex);
+			}
+		}
+
+		[HttpDelete("[action]/{email}")]
+		public async Task<IActionResult> ClearActivities(string email)
+		{
+			try
+			{
+				if (string.IsNullOrWhiteSpace(email))
+				{
+					return NotFound();
+				}
+
+				var activitiesToBeRemoved = ActivityDbContext.Activities.Where(activity => activity.EmailAddress == email);
+
+				if (!activitiesToBeRemoved.Any())
+				{
+					return NotFound();
+				}
+
+				ActivityDbContext.RemoveRange(activitiesToBeRemoved);
+				await ActivityDbContext.SaveChangesAsync();
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, ex);
+			}
+		}
+
+		[HttpPut("[action]")]
+		public async Task<IActionResult> UpdateActivity([FromBody]Activity activity)
+		{
+			try
+			{
+				if (activity == null)
+				{
+					return NotFound();
+				}
+
+				ActivityDbContext.Activities.Update(activity);
+				await ActivityDbContext.SaveChangesAsync();
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, ex);
+			}
+		}
+
+		[HttpDelete("[action]/{Id}")]
+		public async Task<IActionResult> DeleteActivity(int Id)
+		{
+			try
+			{
+				var activityToDelete = await ActivityDbContext.Activities.FirstOrDefaultAsync(activity => activity.Id == Id);
+
+				if (activityToDelete == null)
+				{
+					return NotFound();
+				}
+
+				ActivityDbContext.Remove(activityToDelete);
+				await ActivityDbContext.SaveChangesAsync();
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, ex);
+			}
+		}
+
+		[HttpGet("[action]/{email}")]
+		[Produces(typeof(IList<Activity>))]
+		public async Task<IActionResult> GetActivities(string email)
+		{
+			try
+			{
+				return await GetActivitiesInternal(email);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, ex);
+			}
+		}
+
+		private async Task<IActionResult> GetActivitiesInternal(string email)
+		{
+			if (string.IsNullOrWhiteSpace(email))
+			{
+				return NotFound();
+			}
+
 			var activities = await ActivityDbContext.Activities
-				.Where(activity => activity.EmailAddress == email)
-				.ToListAsync();
-			return activities;
+					.Where(activity => activity.EmailAddress == email)
+					.ToListAsync();
+			return Ok(activities);
 		}
 	}
 }
