@@ -121,9 +121,9 @@ else
 						fileName = ICalCreator.FileNameIcalExtensionAppend(activity.Id.ToString());
 						<td><DownloadButton Payload="@activity.CalendarString" FileName="@fileName">ics File</DownloadButton></td>
 					}
-					<td>
-						<button class="btn btn-primary" onclick="@DeleteActivity">Delete Activity</button>
-					</td>
+						<td>
+							<button class="btn btn-primary" onclick="@DeleteActivity">Delete Activity</button>
+						</td>
 				</tr>
 			}
 		</tbody>
@@ -206,7 +206,7 @@ protected async Task PostActivity()
 		};
 
 		await Http.PostJsonAsync<Activity>($"api/WeatherForecast/AddActivity", activity);
-		await ScheduleActivities();
+		await GetActivities();
 	}
 }
 }
