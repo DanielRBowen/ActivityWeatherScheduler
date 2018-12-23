@@ -163,11 +163,6 @@ protected async Task GetWeatherForZip()
 protected async Task GetActivities()
 {
 	activities = await Http.GetJsonAsync<List<Activity>>($"api/WeatherForecast/GetActivities/{Email}");
-
-	if (activities.Count > 0)
-	{
-		StateHasChanged();
-	}
 }
 
 protected async Task DeleteActivity()
@@ -185,11 +180,6 @@ protected async Task ClearActivities()
 protected async Task ScheduleActivities()
 {
 	activities = await Http.GetJsonAsync<List<Activity>>($"api/WeatherForecast/ScheduleActivities/{Email}");
-
-	if (activities.Count > 0)
-	{
-		StateHasChanged();
-	}
 }
 
 protected async Task PostActivity()
