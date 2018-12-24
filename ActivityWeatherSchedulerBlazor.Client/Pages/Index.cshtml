@@ -122,7 +122,7 @@ else
 						<td><DownloadButton Payload="@activity.CalendarString" FileName="@fileName">ics File</DownloadButton></td>
 					}
 						<td>
-							<button class="btn btn-primary" onclick="@DeleteActivity">Delete Activity</button>
+							<button class="btn btn-primary" onclick="@(() => { DeleteActivity(activity.Id); })">Delete Activity</button>
 						</td>
 				</tr>
 			}
@@ -145,7 +145,6 @@ decimal TemperatureF = 32;
 bool Above = false;
 private string ZipCode { get; set; } = "84103";
 string fileName = string.Empty;
-int ButtonClickedActivityId = 0;
 
 //Weather functions
 
@@ -165,9 +164,9 @@ protected async Task GetActivities()
 	activities = await Http.GetJsonAsync<List<Activity>>($"api/WeatherForecast/GetActivities/{Email}");
 }
 
-protected async Task DeleteActivity()
+protected async Task DeleteActivity(int Id)
 {
-	await Http.DeleteAsync($"api/WeatherForecast/DeleteActivity/{ButtonClickedActivityId}");
+	await Http.DeleteAsync($"api/WeatherForecast/DeleteActivity/{Id}");
 	await GetActivities();
 }
 

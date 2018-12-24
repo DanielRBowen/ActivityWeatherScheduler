@@ -209,7 +209,7 @@ namespace ActivityWeatherSchedulerBlazor.Server.Controllers
 		[HttpGet("[action]/{email}")]
 		[Produces(typeof(IList<Activity>))]
 		public async Task<IActionResult> GetActivities(string email)
-		{
+			{
 			try
 			{
 				return await GetActivitiesInternal(email);
