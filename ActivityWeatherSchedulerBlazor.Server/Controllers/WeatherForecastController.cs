@@ -209,7 +209,7 @@ namespace ActivityWeatherSchedulerBlazor.Server.Controllers
 		[HttpGet("[action]/{email}")]
 		[Produces(typeof(IList<Activity>))]
 		public async Task<IActionResult> GetActivities(string email)
-			{
+		{
 			try
 			{
 				return await GetActivitiesInternal(email);
@@ -228,8 +228,9 @@ namespace ActivityWeatherSchedulerBlazor.Server.Controllers
 			}
 
 			var activities = await ActivityDbContext.Activities
-					.Where(activity => activity.EmailAddress == email)
-					.ToListAsync();
+				.AsNoTracking()
+				.Where(activity => activity.EmailAddress == email)
+				.ToListAsync();
 			return Ok(activities);
 		}
 	}

@@ -121,9 +121,9 @@ else
 						fileName = ICalCreator.FileNameIcalExtensionAppend(activity.Id.ToString());
 						<td><DownloadButton Payload="@activity.CalendarString" FileName="@fileName">ics File</DownloadButton></td>
 					}
-						<td>
-							<button class="btn btn-primary" onclick="@(() => { DeleteActivity(activity.Id); })">Delete Activity</button>
-						</td>
+					<td>
+						<button class="btn btn-primary" onclick="@(() => { DeleteActivity(activity.Id); })">Delete Activity</button>
+					</td>
 				</tr>
 			}
 		</tbody>
