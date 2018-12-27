@@ -263,7 +263,7 @@ protected async Task PostActivity()
 			Above = Above
 		};
 
-		await Http.PostJsonAsync<Activity>($"api/WeatherForecast/AddActivity", activity);
+		await Http.PostJsonAsync($"api/WeatherForecast/AddActivity", activity);
 		await GetActivities();
 	}
 }
