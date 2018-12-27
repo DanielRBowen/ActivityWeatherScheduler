@@ -157,114 +157,114 @@ else
 
 
 @functions {
-// Weather fields
+	// Weather fields
 
-List<WeatherForecast> forecasts;
+	List<WeatherForecast> forecasts;
 
-// Activity fields
+	// Activity fields
 
-List<Activity> activities;
-string Email = string.Empty;
-string Summary = string.Empty;
-decimal TemperatureF = 32;
-bool Above = false;
-string ZipCode { get; set; } = "84103";
-string fileName = string.Empty;
+	List<Activity> activities;
+	string Email = string.Empty;
+	string Summary = string.Empty;
+	decimal TemperatureF = 32;
+	bool Above = false;
+	string ZipCode { get; set; } = "84103";
+	string fileName = string.Empty;
 
-int EditId { get; set; } = 0;
-string EditSummary = string.Empty;
-decimal EditTemperatureF = 0;
-bool EditAbove = false;
-string EditZipCode { get; set; } = string.Empty;
+	int EditId { get; set; } = 0;
+	string EditSummary = string.Empty;
+	decimal EditTemperatureF = 0;
+	bool EditAbove = false;
+	string EditZipCode { get; set; } = string.Empty;
 
 
-//Weather functions
+	//Weather functions
 
-protected async Task GetWeatherForZip()
-{
-	if (Validation.IsFiveDigits(ZipCode))
+	protected async Task GetWeatherForZip()
 	{
-		forecasts = await Http.GetJsonAsync<List<WeatherForecast>>($"api/WeatherForecast/FiveDayWeatherForecast/{ZipCode}");
-		StateHasChanged();
-	}
-}
-
-// Activity functions
-
-protected async Task GetActivities()
-{
-	activities = await Http.GetJsonAsync<List<Activity>>($"api/WeatherForecast/GetActivities/{Email}");
-}
-
-protected async Task DeleteActivity(int Id)
-{
-	await Http.DeleteAsync($"api/WeatherForecast/DeleteActivity/{Id}");
-	await GetActivities();
-}
-
-protected void ActivateEdit(int editId)
-{
-	EditId = editId;
-
-	if (editId > 0)
-	{
-		var activity = activities.FirstOrDefault(activity0 => activity0.Id == editId);
-		EditZipCode = activity.ZipCode;
-		EditSummary = activity.Summary;
-		EditTemperatureF = activity.TemperatureF;
-		EditAbove = activity.Above;
-	}
-
-	StateHasChanged();
-}
-
-protected async Task UpdateActivity(int Id)
-{
-	if (Validation.IsEmail(Email) && Validation.IsFiveDigits(EditZipCode))
-	{
-		var activity = new Activity
+		if (Validation.IsFiveDigits(ZipCode))
 		{
-			Id = Id,
-			EmailAddress = Email,
-			ZipCode = EditZipCode,
-			Summary = EditSummary,
-			TemperatureF = EditTemperatureF,
-			Above = EditAbove,
-		};
-
-		await Http.PutJsonAsync<Activity>($"api/WeatherForecast/UpdateActivity", activity);
+			forecasts = await Http.GetJsonAsync<List<WeatherForecast>>($"api/WeatherForecast/FiveDayWeatherForecast/{ZipCode}");
+			StateHasChanged();
+		}
 	}
 
-	await GetActivities();
-	ActivateEdit(0);
-}
+	// Activity functions
 
-protected async Task ClearActivities()
-{
-	await Http.DeleteAsync($"api/WeatherForecast/ClearActivities/{Email}");
-	await GetActivities();
-}
-
-protected async Task ScheduleActivities()
-{
-	activities = await Http.GetJsonAsync<List<Activity>>($"api/WeatherForecast/ScheduleActivities/{Email}");
-}
-
-protected async Task PostActivity()
-{
-	if (Validation.IsEmail(Email) && Validation.IsFiveDigits(ZipCode))
+	protected async Task GetActivities()
 	{
-		var activity = new Activity
-		{
-			EmailAddress = Email,
-			ZipCode = ZipCode,
-			Summary = Summary,
-			TemperatureF = TemperatureF,
-			Above = Above
-		};
+		activities = await Http.GetJsonAsync<List<Activity>>($"api/WeatherForecast/GetActivities/{Email}");
+	}
 
-		await Http.PostJsonAsync<Activity>($"api/WeatherForecast/AddActivity", activity);
+	protected async Task DeleteActivity(int Id)
+	{
+		await Http.DeleteAsync($"api/WeatherForecast/DeleteActivity/{Id}");
 		await GetActivities();
 	}
-}
+
+	protected void ActivateEdit(int editId)
+	{
+		EditId = editId;
+
+		if (editId > 0)
+		{
+			var activity = activities.FirstOrDefault(activity0 => activity0.Id == editId);
+			EditZipCode = activity.ZipCode;
+			EditSummary = activity.Summary;
+			EditTemperatureF = activity.TemperatureF;
+			EditAbove = activity.Above;
+		}
+
+		StateHasChanged();
+	}
+
+	protected async Task UpdateActivity(int Id)
+	{
+		if (Validation.IsEmail(Email) && Validation.IsFiveDigits(EditZipCode))
+		{
+			var activity = new Activity
+			{
+				Id = Id,
+				EmailAddress = Email,
+				ZipCode = EditZipCode,
+				Summary = EditSummary,
+				TemperatureF = EditTemperatureF,
+				Above = EditAbove,
+			};
+
+			await Http.PutJsonAsync<Activity>($"api/WeatherForecast/UpdateActivity", activity);
+		}
+
+		ActivateEdit(0);
+		await GetActivities();
+	}
+
+	protected async Task ClearActivities()
+	{
+		await Http.DeleteAsync($"api/WeatherForecast/ClearActivities/{Email}");
+		await GetActivities();
+	}
+
+	protected async Task ScheduleActivities()
+	{
+		activities = await Http.GetJsonAsync<List<Activity>>($"api/WeatherForecast/ScheduleActivities/{Email}");
+	}
+
+	protected async Task PostActivity()
+	{
+		if (Validation.IsEmail(Email) && Validation.IsFiveDigits(ZipCode))
+		{
+			var activity = new Activity
+			{
+				EmailAddress = Email,
+				ZipCode = ZipCode,
+				Summary = Summary,
+				TemperatureF = TemperatureF,
+				Above = Above
+			};
+
+			await Http.PostJsonAsync<Activity>($"api/WeatherForecast/AddActivity", activity);
+			await GetActivities();
+		}
+	}
 }

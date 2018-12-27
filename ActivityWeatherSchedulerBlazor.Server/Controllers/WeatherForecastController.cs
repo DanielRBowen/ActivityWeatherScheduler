@@ -42,7 +42,6 @@ namespace ActivityWeatherSchedulerBlazor.Server.Controllers
 				.Include(cachedWeather0 => cachedWeather0.WeatherForecasts)
 				.SingleOrDefaultAsync(cachedWeather0 => cachedWeather0.ZipCode == zip && cachedWeather0.DateCached.LocalDateTime.ToShortDateString() == utcNow.LocalDateTime.ToShortDateString());
 
-
 			if (cachedWeather == null)
 			{
 				weatherForecasts = GetWeather.FiveDayAround1500Forecast(zip).ToList();
@@ -55,14 +54,12 @@ namespace ActivityWeatherSchedulerBlazor.Server.Controllers
 				};
 
 				var previousCachedWeathersForZipcodeQuery = ActivityDbContext.CachedWeathers
+					.AsNoTracking()
 					.Where(previousCachedWeather => previousCachedWeather.ZipCode == zip);
 
 				if (previousCachedWeathersForZipcodeQuery.Count() > 0)
 				{
-					foreach (var previousCachedWeather in previousCachedWeathersForZipcodeQuery)
-					{
-						ActivityDbContext.CachedWeathers.Remove(previousCachedWeather);
-					}
+					ActivityDbContext.CachedWeathers.RemoveRange(previousCachedWeathersForZipcodeQuery);
 				}
 
 				ActivityDbContext.CachedWeathers.Add(cachedWeather);
