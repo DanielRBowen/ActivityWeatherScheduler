@@ -139,9 +139,9 @@ else
 				</tr>
 				<Collapse IsOpen="activity.Id == EditId">
 					<tr>
-						<td><input type="text" bind="@EditSummary" class="form-control" /></td>
-						<td><input type="number" bind="@EditZipCode" onblur="@GetWeatherForZip" class="form-control" /></td>
-						<td><input type="text" bind="@EditTemperatureF" class="form-control" /></td>
+						<td><input type="text" class="form-control" bind="@EditSummary" /></td>
+						<td><input type="number" class="form-control" bind="@EditZipCode" onblur="@GetWeatherForZip" /></td>
+						<td><input type="text" class="form-control" bind="@EditTemperatureF" /></td>
 						<td><input type="checkbox" class="form-check-input" bind="@EditAbove" /></td>
 						<td>ics file</td>
 						<td>
@@ -213,6 +213,14 @@ else
 			EditSummary = activity.Summary;
 			EditTemperatureF = activity.TemperatureF;
 			EditAbove = activity.Above;
+		}
+		else
+		{
+			EditZipCode = string.Empty;
+			EditSummary = string.Empty;
+			EditTemperatureF = 0;
+			EditAbove = false;
+			EditId = 0;
 		}
 
 		StateHasChanged();
