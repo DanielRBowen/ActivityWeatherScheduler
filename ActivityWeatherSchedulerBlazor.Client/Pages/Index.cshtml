@@ -232,11 +232,10 @@ else
 				Above = EditAbove,
 			};
 
-			await Http.PutJsonAsync<Activity>($"api/WeatherForecast/UpdateActivity", activity);
+			await Http.PutJsonAsync($"api/WeatherForecast/UpdateActivity", activity);
+			await GetActivities();
+			ActivateEdit(0);
 		}
-
-		ActivateEdit(0);
-		await GetActivities();
 	}
 
 	protected async Task ClearActivities()
