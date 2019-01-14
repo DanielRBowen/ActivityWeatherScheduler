@@ -70,7 +70,8 @@ namespace ActivityWeatherSchedulerTests
 			};
 
 			var calendarEvent = ICalCreator.CreateCalendarEventForActivity(activity);
-			var directoryPath = "D:\\Users\\Daniel\\Downloads";
+			var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+			var directoryPath = appDataPath + "\\ActivityWeatherScheduler";
 			var filePath = directoryPath + $"\\{activity.Summary}.ics";
 			ICalCreator.SaveCalendarLocally(filePath, calendarEvent);
 		}

@@ -72,8 +72,8 @@ namespace ActivityWeatherSchedulerLibraryNETStandard
 
 		public static string JSONAppDataFilePath(JSONFileType fileType)
 		{
-			var myDocumentsPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-			var directoryPath = myDocumentsPath + "\\ActivityWeatherScheduler";
+			var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+			var directoryPath = appDataPath + "\\ActivityWeatherScheduler";
 			Directory.CreateDirectory(directoryPath);
 
 			switch (fileType)
